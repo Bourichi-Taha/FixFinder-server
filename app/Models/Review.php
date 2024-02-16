@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use DB;
-use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
+class Review extends BaseModel
 {
+
+    public static $cacheKey = 'reviews';
+
+
     protected $fillable = [
         'reviewer_id',
         'reviewee_id',

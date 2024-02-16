@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use DB;
-use Illuminate\Database\Eloquent\Model;
 
-class Provider extends Model
+class Provider extends BaseModel
 {
+    public static $cacheKey = 'providers';
+
     protected $fillable = [
         'user_id',
         'description',
@@ -18,18 +19,18 @@ class Provider extends Model
     ];
     protected static function booted()
     {
-      parent::booted();
-      static::created(function ($provider) {
-        $user = $provider->user;
-        $user->givePermission('providers.' . $provider->id . '.read');
-        $user->givePermission('providers.' . $provider->id . '.update');
-        $user->givePermission('providers.' . $provider->id . '.delete');
-      });
-      static::deleted(function ($provider) {
-        $permissions = Permission::where('name', 'like', 'providers.' . $provider->id . '.%')->get();
-        DB::table('users_permissions')->whereIn('permission_id', $permissions->pluck('id'))->delete();
-        Permission::destroy($permissions->pluck('id'));
-      });
+        parent::booted();
+        static::created(function ($provider) {
+            $user = $provider->user;
+            $user->givePermission('providers.' . $provider->id . '.read');
+            $user->givePermission('providers.' . $provider->id . '.update');
+            $user->givePermission('providers.' . $provider->id . '.delete');
+        });
+        static::deleted(function ($provider) {
+            $permissions = Permission::where('name', 'like', 'providers.' . $provider->id . '.%')->get();
+            DB::table('users_permissions')->whereIn('permission_id', $permissions->pluck('id'))->delete();
+            Permission::destroy($permissions->pluck('id'));
+        });
     }
     // Define relationships with other models
     public function reviews()
@@ -49,7 +50,6 @@ class Provider extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'providers_categories');
-        
     }
     //rules
 

@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use DB;
-use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class Booking extends BaseModel
 {
+    public static $cacheKey = 'bookings';
+
     protected $fillable = [
         'client_id',
         'provider_id',

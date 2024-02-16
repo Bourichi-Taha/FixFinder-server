@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Location extends Model
+class Location extends BaseModel
 {
     use HasFactory;
+    public static $cacheKey = 'locations';
 
     protected $fillable = [
         'name',
