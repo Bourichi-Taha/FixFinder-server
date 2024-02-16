@@ -60,8 +60,8 @@ class Provider extends BaseModel
             'user_id' => 'required|unique:providers,user_id|exists:users,id',
             'description' => 'required|string|max:255',
             'availability_schedule' => 'required|string|max:255',
-            'hourly_rate' => 'required|float',
-            'average_rating' => 'required|float',
+            'hourly_rate' => 'float',
+            'average_rating' => 'float',
         ];
         if ($id !== null) {
             $rules['user_id'] .= ',' . $id;
