@@ -16,18 +16,40 @@ class CrudPermissionSeeder extends Seeder
   public function run()
   {
     /*
-      Here, include project specific permissions. E.G.:
-      $this->createScopePermissions('interests', ['create', 'read', 'update', 'delete', 'import', 'export']);
-      $this->createScopePermissions('games', ['create', 'read', 'read_own', 'update', 'delete']);
+      Here, include project specific permissions. E.G.: */
+      $this->createScopePermissions('uploads', ['create', 'read', 'update', 'delete',]);
+      $this->createScopePermissions('reviews', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->createScopePermissions('locations', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->createScopePermissions('categories', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->createScopePermissions('notifications', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->createScopePermissions('bookings', ['create', 'read', 'read_own', 'update', 'delete']);
 
       $adminRole = Role::where('name', 'admin')->first();
-      $this->assignScopePermissionsToRole($adminRole, 'interests', ['create', 'read', 'update', 'delete', 'import', 'export']);
-      $this->assignScopePermissionsToRole($adminRole, 'games', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->assignScopePermissionsToRole($adminRole, 'uploads', ['create', 'read', 'update', 'delete',]);
+      $this->assignScopePermissionsToRole($adminRole, 'reviews', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->assignScopePermissionsToRole($adminRole, 'locations', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->assignScopePermissionsToRole($adminRole, 'categories', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->assignScopePermissionsToRole($adminRole, 'notifications', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->assignScopePermissionsToRole($adminRole, 'bookings', ['create', 'read', 'read_own', 'update', 'delete']);
 
-      $advertiserRole = Role::where('name', 'advertiser')->first();
-      $this->assignScopePermissionsToRole($advertiserRole, 'interests', ['read']);
-      $this->assignScopePermissionsToRole($advertiserRole, 'games', ['create', 'read_own']);
-    */
+      $providerRole = Role::where('name', 'provider')->first();
+      $this->assignScopePermissionsToRole($providerRole, 'uploads', ['create', 'read', 'update', 'delete',]);
+      $this->assignScopePermissionsToRole($providerRole, 'locations', ['create', 'read', 'update', 'delete',]);
+      $this->assignScopePermissionsToRole($providerRole, 'bookings', ['create', 'read_own']);
+      $this->assignScopePermissionsToRole($providerRole, 'notifications', ['read']);
+      $this->assignScopePermissionsToRole($providerRole, 'categories', ['read']);
+      $this->assignScopePermissionsToRole($providerRole, 'reviews', ['create', 'read', 'read_own']);
+      $userRole = Role::where('name', 'user')->first();
+      $this->assignScopePermissionsToRole($userRole, 'uploads', ['create', 'read', 'update', 'delete',]);
+      $this->assignScopePermissionsToRole($userRole, 'locations', ['create', 'read', 'update', 'delete',]);
+      $this->assignScopePermissionsToRole($userRole, 'bookings', ['create', 'read_own']);
+      $this->assignScopePermissionsToRole($userRole, 'notifications', ['read']);
+      $this->assignScopePermissionsToRole($userRole, 'categories', ['read']);
+      $this->assignScopePermissionsToRole($userRole, 'reviews', ['create', 'read', 'read_own']);
+
+
+
+   
   }
 
   public function createRole(string $name): Role

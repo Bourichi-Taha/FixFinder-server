@@ -17,13 +17,16 @@ class PermissionSeeder extends Seeder
   {
     // Define roles
     $userRole = $this->createRole('user');
+    $providerRole = $this->createRole('provider');
     $adminRole = $this->createRole('admin');
 
     // Define permissions
     $this->createScopePermissions('users', ['create', 'read', 'update', 'delete']);
+    $this->createScopePermissions('providers', ['create', 'read', 'update', 'delete']);
 
     // Assign permissions to roles
     $this->assignScopePermissionsToRole($adminRole, 'users', ['create', 'read', 'update', 'delete']);
+    $this->assignScopePermissionsToRole($adminRole, 'providers', ['create', 'read', 'update', 'delete']);
   }
 
   public function createRole(string $name): Role

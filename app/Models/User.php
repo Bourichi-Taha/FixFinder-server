@@ -15,9 +15,9 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 
 class User extends BaseModel implements
-    AuthenticatableContract,
-    AuthorizableContract,
-    CanResetPasswordContract
+  AuthenticatableContract,
+  AuthorizableContract,
+  CanResetPasswordContract
 {
   use HasApiTokens;
   use Notifiable;
@@ -30,6 +30,12 @@ class User extends BaseModel implements
   protected $fillable = [
     'email',
     'password',
+    'firstname',
+    'lastname',
+    'phone',
+    'avatar_id',
+    'location_id',
+    'rating',
   ];
 
   /**
@@ -84,7 +90,24 @@ class User extends BaseModel implements
       Permission::destroy($permissions->pluck('id'));
     });
   }
+  // Define relationships with other models
+  public function reviews()
+  {
+    return $this->hasMany(Review::class);
+  }
+  public function avatar()
+  {
+    return $this->belongsTo(Upload::class);
+  }
+  public function location()
+  {
+    return $this->belongsTo(Location::class);
+  }
 
+  public function bookings()
+  {
+    return $this->hasMany(Booking::class);
+  }
   public function roles()
   {
     return $this->belongsToMany(Role::class, 'users_roles');
@@ -161,6 +184,12 @@ class User extends BaseModel implements
       'role' => 'required|exists:roles,name',
       'email' => 'required|email|unique:users,email',
       'password' => 'required|string',
+      'firstname' => 'required|string',
+      'lastname' => 'required|string',
+      'phone' => 'required|string',//should be unique
+      'rating' => 'required|float',
+      'avatar_id' => 'exists:uploads,id',
+      'location_id' => 'exists:locations,id',
     ];
     if ($id !== null) {
       $rules['email'] .= ',' . $id;
