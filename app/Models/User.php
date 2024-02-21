@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Notifications\EmailVerifiedNotification;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use DB;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -17,14 +19,14 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 class User extends BaseModel implements
   AuthenticatableContract,
   AuthorizableContract,
-  CanResetPasswordContract
+  CanResetPasswordContract,
+  MustVerifyEmail
 {
   use HasApiTokens;
   use Notifiable;
   use Authenticatable;
   use Authorizable;
   use CanResetPassword;
-  use MustVerifyEmail;
 
   public static $cacheKey = 'users';
   protected $fillable = [
@@ -58,10 +60,14 @@ class User extends BaseModel implements
   protected $casts = [
     'email_verified_at' => 'datetime',
   ];
+  protected $with = [
+    'avatar',
+    'location',
+  ];
 
   protected $appends = [
     'rolesNames',
-    'permissionsNames'
+    'permissionsNames',
   ];
 
   public function getRolesNamesAttribute()
@@ -70,6 +76,7 @@ class User extends BaseModel implements
     sort($rolesNames);
     return $rolesNames;
   }
+
 
   public function getPermissionsNamesAttribute()
   {
@@ -187,9 +194,9 @@ class User extends BaseModel implements
       'firstname' => 'required|string',
       'lastname' => 'required|string',
       'phone' => 'required|string',//should be unique
-      'rating' => 'required|float',
-      'avatar_id' => 'exists:uploads,id',
-      'location_id' => 'exists:locations,id',
+      'rating' => 'nullable|float',
+      'avatar_id' => 'required|exists:uploads,id',
+      'location_id' => 'required|exists:locations,id',
     ];
     if ($id !== null) {
       $rules['email'] .= ',' . $id;
@@ -197,9 +204,47 @@ class User extends BaseModel implements
     }
     return $rules;
   }
-
+  public function sendEmailVerificationNotification()
+  {
+      $this->notify(new VerifyEmailNotification());
+  }
+  public function sendVerifiedEmailNotification()
+  {
+      $this->notify(new EmailVerifiedNotification());
+  }
   public function sendPasswordResetNotification($token)
   {
     $this->notify(new ResetPasswordNotification($token));
   }
-}
+/**
+     * Determine if the user has verified their email address.
+     *
+     * @return bool
+     */
+    public function hasVerifiedEmail()
+    {
+        return $this->email_verified_at !== null; // Assuming you have a column named 'hasVerifiedEmail' in your users table
+    }
+
+    /**
+     * Mark the given user's email as verified.
+     *
+     * @return void
+     */
+    public function markEmailAsVerified()
+    {
+        $this->forceFill([
+            'email_verified_at' => $this->freshTimestamp(), // Optional if you are using Laravel's default email verification functionality
+        ])->save();
+    }
+
+    /**
+     * Get the email address that should be used for verification.
+     *
+     * @return string
+     */
+    public function getEmailForVerification()
+    {
+        return $this->email;
+    }
+  }

@@ -23,9 +23,8 @@ class Location extends BaseModel
 
     public function rules($id = null)
     {
-      $id = $id ?? request()->route('id');
       $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'nullable|string|max:255',
         'address' => 'nullable|string|max:255',
         'city' => 'nullable|string|max:255',
         'state' => 'nullable|string|max:255',
@@ -34,9 +33,7 @@ class Location extends BaseModel
         'latitude' => 'nullable|numeric',
         'longitude' => 'nullable|numeric',
       ];
-      if ($id !== null) {
-        $rules['name'] .= ',' . $id;
-      }
+
       return $rules;
     }
 

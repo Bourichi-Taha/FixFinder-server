@@ -16,6 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::name('verification.')->group(function () {
+  Route::controller(AuthController::class)->group(function () {
+    Route::post('/email/verify', 'verify')->name('verify');
+    Route::put('/verify-email/{expires}/{hash}/{id}/{signature}','verifyEmail')->name('verify-email');
+
+  });
+});
 Route::prefix('auth')->name('auth.')->group(function () {
   Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');

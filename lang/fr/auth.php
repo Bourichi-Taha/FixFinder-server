@@ -17,7 +17,7 @@ return [
   'email_already_exists' => 'L\'adresse email est déjà utilisée.',
   'login_success' => 'Vous êtes connecté.',
   'logout_success' => 'Vous avez été déconnecté.',
-  'register_success' => 'Vous êtes enregistré.',
+  'register_success' => 'Vous êtes enregistré. N\'oubliez pas de vérifier votre e-mail.',
   'password' => 'Le mot de passe est incorrect.',
   'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
   'unauthenticated' => 'Vous n\'êtes pas connecté.',
@@ -27,5 +27,6 @@ return [
   'password_reset_success' => 'Votre mot de passe a été réinitialisé.',
   'invalid_token' => 'Le jeton est invalide.',
   'reset_throttled' => 'Vous avez déjà demandé un lien de réinitialisation de mot de passe.',
-  'disconnected' => 'Vous êtes déconnecté.'
+  'disconnected' => 'Vous êtes déconnecté.',
+  'email_not_admin' => 'Vous n\'avez pas vérifié votre e-mail.'
 ];

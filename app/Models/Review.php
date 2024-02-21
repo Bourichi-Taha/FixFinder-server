@@ -56,7 +56,7 @@ class Review extends BaseModel
             'reviewee_id' => 'required|exists:providers,id',
             'booking_id' => 'required|exists:bookings,id',
             'review_text' => 'required|string|max:255',
-            'rating' => 'required|float',
+            'rating' => 'required|numeric',
         ];
 
         return $rules;

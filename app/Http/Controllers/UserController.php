@@ -17,11 +17,12 @@ class UserController extends CrudController
     $request->merge(['password' => Hash::make($request->password)]);
     return parent::createOne($request);
   }
-
-  public function afterCreateOne($item, $request)
-  {
+  public function afterCreateOne($item,$request){
+    $item->sendEmailVerificationNotification();
     $item->syncRoles([$request->role]);
+
   }
+
 
   public function updateOne($id, Request $request)
   {

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Notifications\EmailVerifiedNotification;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -13,6 +15,23 @@ use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
+  public function verify(EmailVerificationRequest $request)
+  {
+    $user = User::find($request->input('id'));
+    if (!$user) {
+      return response()->json(['success' => false, 'errors' => [__('auth.verification_invalid')]]);
+    }
+    if ($user->hasVerifiedEmail()) {
+      return response()->json(['success' => false, 'errors' => [__('auth.email_verified')]]);
+    }
+
+    $user->markEmailAsVerified();
+    $user->sendVerifiedEmailNotification();
+
+    return response()->json(['success' => true, 'message' => __('auth.verification_completed')]);
+
+  }
+
   public function me(Request $request)
   {
     $user = Auth::user();
@@ -22,6 +41,9 @@ class AuthController extends Controller
     $admin = $request->input('admin');
     if ($admin && !$user->hasRole('admin')) {
       return response()->json(['success' => false, 'errors' => [__('auth.not_admin')]]);
+    }
+    if ($admin && !$user->hasVerifiedEmail()) {
+      return response()->json(['success' => false, 'errors' => [__('auth.email_not_admin')]]);
     }
 
     return response()->json([
@@ -43,6 +65,9 @@ class AuthController extends Controller
     if ($admin && !$user->hasRole('admin')) {
       return response()->json(['success' => false, 'errors' => [__('auth.not_admin')]]);
     }
+    if ($admin && !$user->hasVerifiedEmail()) {
+      return response()->json(['success' => false, 'errors' => [__('auth.email_not_admin')]]);
+    }
     $token = $user->createToken('authToken', ['expires_in' => 60 * 24 * 30])->plainTextToken;
 
     return response()->json(['success' => true, 'message' => __('auth.login_success'), 'data' => ['token' => $token]]);
@@ -59,8 +84,8 @@ class AuthController extends Controller
       'password' => Hash::make($request->password),
     ]);
     $user->assignRole('user');
-    $token = $user->createToken('authToken', ['expires_in' => 60 * 24 * 30])->plainTextToken;
-    return response()->json(['success' => true, 'data' => ['token' => $token], 'message' => __('auth.register_success')]);
+    $user->sendEmailVerificationNotification();
+    return response()->json(['success' => true, 'message' => __('auth.register_success')]);
   }
 
   public function logout()
@@ -89,11 +114,11 @@ class AuthController extends Controller
   public function resetPassword(Request $request)
   {
     $status = Password::reset(
-        $request->only('email', 'password', 'password_confirmation', 'token'),
-        function ($user, $password) {
-          $user->password = Hash::make($password);
-          $user->save();
-        }
+      $request->only('email', 'password', 'password_confirmation', 'token'),
+      function ($user, $password) {
+        $user->password = Hash::make($password);
+        $user->save();
+      }
     );
     if ($status === Password::PASSWORD_RESET) {
       return response()->json(['success' => true, 'message' => __('auth.password_reset_success')]);

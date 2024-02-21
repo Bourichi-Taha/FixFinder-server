@@ -27,5 +27,7 @@ return [
   'password_reset_success' => 'Password reset success.',
   'invalid_token' => 'Invalid token.',
   'reset_throttled' => 'Reset throttled.',
-  'disconnected' => 'Disconnected.'
+  'disconnected' => 'Disconnected.',
+  'email_not_admin' => 'You didn\'t verify your email.'
+
 ];
