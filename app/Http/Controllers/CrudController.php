@@ -58,16 +58,16 @@ abstract class CrudController extends Controller
     }
 
     // Retrieve item from cache if exists, otherwise retrieve from database
-    if (property_exists($this->modelClass, 'cacheKey')) {
-      $cacheKey = $this->modelClass::$cacheKey;
-      if (!Cache::has($cacheKey)) {
-        $items = $this->model()->all();
-        Cache::put($cacheKey, $items);
-      } else {
-        $items = Cache::get($cacheKey);
-      }
-    }
-    $item = $items->firstWhere('id', $id);
+    // if (property_exists($this->modelClass, 'cacheKey')) {
+    //   $cacheKey = $this->modelClass::$cacheKey;
+    //   if (!Cache::has($cacheKey)) {
+    //     $items = $this->model()->all();
+    //     Cache::put($cacheKey, $items);
+    //   } else {
+    //     $items = Cache::get($cacheKey);
+    //   }
+    // }
+    $item = $this->model()->find( $id);
 
     if (!$item) {
       return response()->json([
@@ -100,16 +100,16 @@ abstract class CrudController extends Controller
     }
 
     // Retrieve all items from cache if exists, otherwise retrieve from database
-    if (property_exists($this->modelClass, 'cacheKey')) {
-      $cacheKey = $this->modelClass::$cacheKey;
-      if (!Cache::has($cacheKey)) {
-        $items = $this->model()->all();
-        Cache::put($cacheKey, $items);
-      } else {
-        $items = Cache::get($cacheKey);
-      }
-    }
-
+    // if (property_exists($this->modelClass, 'cacheKey')) {
+    //   $cacheKey = $this->modelClass::$cacheKey;
+    //   if (!Cache::has($cacheKey)) {
+    //     $items = $this->model()->all();
+    //     Cache::put($cacheKey, $items);
+    //   } else {
+    //     $items = Cache::get($cacheKey);
+    //   }
+    // }
+    $items = $this->model()->all();
     // If user has permission to read own items only, then filter the items
     if (!$user->hasPermission($this->table, 'read')) {
       $items = $items->filter(function ($model) use ($user) {

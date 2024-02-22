@@ -12,14 +12,4 @@ class ProviderController extends CrudController
   protected $table = 'providers';
   protected $modelClass = Provider::class;
 
-
-  public function afterCreateOne($item, $request)
-  {
-    $item->syncRoles(['provider']);
-  }
-
-  public function afterUpdateOne($item, $request)
-  {
-    $item->syncRoles(['provider']);
-  }
 }

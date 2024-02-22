@@ -17,6 +17,9 @@ class Provider extends BaseModel
 
         // Add other fields as needed
     ];
+    protected $with = [
+        'user',
+      ];
     protected static function booted()
     {
         parent::booted();
@@ -57,9 +60,9 @@ class Provider extends BaseModel
     {
         $id = $id ?? request()->route('id');
         $rules = [
-            'user_id' => 'required|unique:providers,user_id|exists:users,id',
+            'user_id' => 'required|exists:users,id|unique:providers,user_id',
             'description' => 'required|string|max:255',
-            'availability_schedule' => 'required|string|max:255',
+            'availability_schedule' => 'string|max:255',
             'hourly_rate' => 'numeric',
             'average_rating' => 'numeric',
         ];
