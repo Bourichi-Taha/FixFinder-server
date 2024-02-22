@@ -11,7 +11,7 @@ class Booking extends BaseModel
     protected $fillable = [
         'client_id',
         'provider_id',
-        'category_id',
+        'service_id',
         'booking_datetime',
         'status',
         // Add other fields as needed
@@ -41,9 +41,9 @@ class Booking extends BaseModel
     {
         return $this->belongsTo(Provider::class);
     }
-    public function category()
+    public function service()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Service::class);
     }
     //rules
     public function rules($id = null)
@@ -52,7 +52,7 @@ class Booking extends BaseModel
         $rules = [
             'client_id' => 'required|exists:users,id',
             'provider_id' => 'required|exists:providers,id',
-            'category_id' => 'required|exists:categories,id',
+            'service_id' => 'required|exists:categories,id',
             'booking_datetime' => 'required|date|after_or_equal:today',
             'status' => 'required|in:pending,confirmed,completed,cancelled',
         ];
