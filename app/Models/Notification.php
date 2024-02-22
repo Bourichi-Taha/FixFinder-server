@@ -26,7 +26,9 @@ class Notification extends BaseModel
             'message' => 'required|string',
             'is_read' => 'required|boolean',
         ];
-
+        if ($id !== null) {
+            $rules['user_id'] .= ',' . $id;
+        }
         return $rules;
     }
 

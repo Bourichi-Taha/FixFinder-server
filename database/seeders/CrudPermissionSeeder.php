@@ -21,6 +21,7 @@ class CrudPermissionSeeder extends Seeder
       $this->createScopePermissions('reviews', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->createScopePermissions('locations', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->createScopePermissions('categories', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->createScopePermissions('services', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->createScopePermissions('notifications', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->createScopePermissions('bookings', ['create', 'read', 'read_own', 'update', 'delete']);
 
@@ -29,6 +30,7 @@ class CrudPermissionSeeder extends Seeder
       $this->assignScopePermissionsToRole($adminRole, 'reviews', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->assignScopePermissionsToRole($adminRole, 'locations', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->assignScopePermissionsToRole($adminRole, 'categories', ['create', 'read', 'read_own', 'update', 'delete']);
+      $this->assignScopePermissionsToRole($adminRole, 'services', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->assignScopePermissionsToRole($adminRole, 'notifications', ['create', 'read', 'read_own', 'update', 'delete']);
       $this->assignScopePermissionsToRole($adminRole, 'bookings', ['create', 'read', 'read_own', 'update', 'delete']);
 
@@ -38,6 +40,7 @@ class CrudPermissionSeeder extends Seeder
       $this->assignScopePermissionsToRole($providerRole, 'bookings', ['create', 'read_own']);
       $this->assignScopePermissionsToRole($providerRole, 'notifications', ['read']);
       $this->assignScopePermissionsToRole($providerRole, 'categories', ['read']);
+      $this->assignScopePermissionsToRole($providerRole, 'services', ['read']);
       $this->assignScopePermissionsToRole($providerRole, 'reviews', ['create', 'read', 'read_own']);
       $userRole = Role::where('name', 'user')->first();
       $this->assignScopePermissionsToRole($userRole, 'uploads', ['create', 'read', 'update', 'delete',]);
@@ -45,6 +48,7 @@ class CrudPermissionSeeder extends Seeder
       $this->assignScopePermissionsToRole($userRole, 'bookings', ['create', 'read_own']);
       $this->assignScopePermissionsToRole($userRole, 'notifications', ['read']);
       $this->assignScopePermissionsToRole($userRole, 'categories', ['read']);
+      $this->assignScopePermissionsToRole($userRole, 'services', ['read']);
       $this->assignScopePermissionsToRole($userRole, 'reviews', ['create', 'read', 'read_own']);
 
 
