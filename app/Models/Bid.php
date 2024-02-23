@@ -13,11 +13,15 @@ class Bid extends BaseModel
         'amount', // The bid amount or price offered by the provider
         // Add any other fields you need to track for each bid
     ];
+    protected $with = [
+        'provider',
+        'order'
+    ];
     protected static function booted()
     {
         parent::booted();
         static::created(function ($bid) {
-            $user = $bid->provider;
+            $user = $bid->provider->user;
             $user->givePermission('bids.' . $bid->id . '.read');
             $user->givePermission('bids.' . $bid->id . '.update');
             $user->givePermission('bids.' . $bid->id . '.delete');
