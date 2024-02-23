@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\BidController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
@@ -66,6 +68,24 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::controller(NotificationController::class)->group(function () {
+            Route::get('/', 'readAll');
+            Route::post('/', 'createOne');
+            Route::get('/{id}', 'readOne');
+            Route::put('/{id}', 'updateOne');
+            Route::delete('/{id}', 'deleteOne');
+        });
+    });
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::controller(OrderController::class)->group(function () {
+            Route::get('/', 'readAll');
+            Route::post('/', 'createOne');
+            Route::get('/{id}', 'readOne');
+            Route::put('/{id}', 'updateOne');
+            Route::delete('/{id}', 'deleteOne');
+        });
+    });
+    Route::prefix('bids')->name('bids.')->group(function () {
+        Route::controller(BidController::class)->group(function () {
             Route::get('/', 'readAll');
             Route::post('/', 'createOne');
             Route::get('/{id}', 'readOne');

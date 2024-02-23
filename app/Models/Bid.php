@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DB;
 
 class Bid extends BaseModel
 {
@@ -12,7 +13,21 @@ class Bid extends BaseModel
         'amount', // The bid amount or price offered by the provider
         // Add any other fields you need to track for each bid
     ];
-
+    protected static function booted()
+    {
+        parent::booted();
+        static::created(function ($bid) {
+            $user = $bid->provider;
+            $user->givePermission('bids.' . $bid->id . '.read');
+            $user->givePermission('bids.' . $bid->id . '.update');
+            $user->givePermission('bids.' . $bid->id . '.delete');
+        });
+        static::deleted(function ($bid) {
+            $permissions = Permission::where('name', 'like', 'bids.' . $bid->id . '.%')->get();
+            DB::table('users_permissions')->whereIn('permission_id', $permissions->pluck('id'))->delete();
+            Permission::destroy($permissions->pluck('id'));
+        });
+    }
     // Define relationships
     public function provider()
     {

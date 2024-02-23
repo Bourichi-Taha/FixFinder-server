@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('status', ['open', 'closed'])->default('open');
+            $table->enum('status', ['active', 'completed', 'cancelled', 'confirmed'])->default('active');
             $table->timestamps();
         });
     }
